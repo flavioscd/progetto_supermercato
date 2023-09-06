@@ -1,12 +1,8 @@
 package com.example.demo.classes;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,13 +10,14 @@ import java.util.concurrent.ThreadLocalRandom;
 @Entity
 public class Carte {
 
-
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String cardNumber;
     private int status;
     private int cardPoints;
@@ -29,10 +26,7 @@ public class Carte {
     private Date expirationDate;
 
     public Carte() {
-
-
     }
-
 
     public Carte(String cardNumber, Date creationDate, Date activationDate, Date expirationDate, int status, int cardPoints) {
         this.cardNumber = cardNumber;
@@ -41,8 +35,6 @@ public class Carte {
         this.creationDate = creationDate;
         this.activationDate = activationDate;
         this.expirationDate = expirationDate;
-
-
     }
 
     public Long getId() {
@@ -101,8 +93,6 @@ public class Carte {
         this.expirationDate = expirationDate;
     }
 
-
-    // Metodo per generare un numero di carta casuale
     public static String generateRandomCardNumber() {
         Random rand = new Random();
         StringBuilder cardNumber = new StringBuilder();
@@ -114,8 +104,6 @@ public class Carte {
         }
         return cardNumber.toString();
     }
-
-    // Metodo per generare una data casuale tra due date
 
     public static Date generateRandomDateTime(String startDateStr, String endDateStr) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -1,6 +1,5 @@
 package com.example.demo.classes;
 
-import com.example.demo.classes.Transazione;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Connection;
