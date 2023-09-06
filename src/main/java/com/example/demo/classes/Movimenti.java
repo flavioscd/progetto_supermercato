@@ -1,10 +1,7 @@
 package com.example.demo.classes;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import com.example.demo.classes.Transazione;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,29 +15,17 @@ public class Movimenti {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Date data;
     private String carta;
-    private String cliente;
     private String prodotto;
     private double importo;
     private int quantita;
-    private double totale;
     private String tipo;
     private int punti;
-    private double sconto;
+    private double totale;
 
-    public Movimenti(Long id, Date data, String carta, String cliente, String prodotto, double importo, int quantita, double totale, String tipo, int punti, double sconto) {
-        this.id = id;
-        this.data = data;
-        this.carta = carta;
-        this.cliente = cliente;
-        this.prodotto = prodotto;
-        this.importo = importo;
-        this.quantita = quantita;
-        this.totale = totale;
-        this.tipo = tipo;
-        this.punti = punti;
-        this.sconto = sconto;
+    public Movimenti() {
     }
 
     public Long getId() {
@@ -67,14 +52,6 @@ public class Movimenti {
         this.carta = carta;
     }
 
-    public String getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
-    }
-
     public String getProdotto() {
         return prodotto;
     }
@@ -99,14 +76,6 @@ public class Movimenti {
         this.quantita = quantita;
     }
 
-    public double getTotale() {
-        return totale;
-    }
-
-    public void setTotale(double totale) {
-        this.totale = totale;
-    }
-
     public String getTipo() {
         return tipo;
     }
@@ -123,12 +92,12 @@ public class Movimenti {
         this.punti = punti;
     }
 
-    public double getSconto() {
-        return sconto;
+    public double getTotale() {
+        return totale;
     }
 
-    public void setSconto(double sconto) {
-        this.sconto = sconto;
+    public void setTotale(double totale) {
+        this.totale = totale;
     }
 
     public static void inserisciMovimenti(Connection connection, String carta, List<Transazione> scontrino) {
@@ -138,18 +107,19 @@ public class Movimenti {
                 java.sql.Date data = new java.sql.Date(System.currentTimeMillis()); // Data corrente
                 insertStatement.setString(1, carta);
                 insertStatement.setDate(2, data);
-                insertStatement.setBigDecimal(3, BigDecimal.valueOf(transazione.getPrezzo()));
+                BigDecimal prezzo = BigDecimal.valueOf(transazione.getPrezzo());
+                insertStatement.setBigDecimal(3, prezzo);
                 insertStatement.setString(4, transazione.getProdotto());
-                insertStatement.setBigDecimal(5, BigDecimal.valueOf(transazione.getPunti()));
+                BigDecimal punti = BigDecimal.valueOf(transazione.getPunti());
+                insertStatement.setBigDecimal(5, punti);
                 insertStatement.setInt(6, transazione.getQuantita());
-                insertStatement.setString(7, "acquisto"); // Puoi personalizzare il tipo di transazione
-                double totale = transazione.getQuantita() * transazione.getPrezzo();
-                insertStatement.setBigDecimal(8, BigDecimal.valueOf(totale));
+                insertStatement.setString(7, "acquisto");
+                BigDecimal totale = prezzo.multiply(BigDecimal.valueOf(transazione.getQuantita()));
+                insertStatement.setBigDecimal(8, totale);
                 insertStatement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 }
